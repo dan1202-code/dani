@@ -1,9 +1,9 @@
 const APIController = (function() {
     
-    const clientId = 'ADD YOUR CLIENT ID';
-    const clientSecret = 'ADD YOUR CLIENT SECRET';
+    const clientId = 'bbb50762f8104a6bb34421a180f1bbc6';
+    const clientSecret = 'd8a31c528efe4099833823b12f0f5c03';
 
-   
+    
     const _getToken = async () => {
 
         const result = await fetch('https://accounts.spotify.com/api/token', {
@@ -90,6 +90,7 @@ const APIController = (function() {
 
 const UIController = (function() {
 
+    //object to hold references to html selectors
     const DOMElements = {
         selectGenre: '#select_genre',
         selectPlaylist: '#select_playlist',
@@ -102,7 +103,7 @@ const UIController = (function() {
 
     return {
 
-       
+     
         inputField() {
             return {
                 genre: document.querySelector(DOMElements.selectGenre),
@@ -113,7 +114,7 @@ const UIController = (function() {
             }
         },
 
-       
+     
         createGenre(text, value) {
             const html = `<option value="${value}">${text}</option>`;
             document.querySelector(DOMElements.selectGenre).insertAdjacentHTML('beforeend', html);
@@ -124,17 +125,17 @@ const UIController = (function() {
             document.querySelector(DOMElements.selectPlaylist).insertAdjacentHTML('beforeend', html);
         },
 
-       
+    
         createTrack(id, name) {
             const html = `<a href="#" class="list-group-item list-group-item-action list-group-item-light" id="${id}">${name}</a>`;
             document.querySelector(DOMElements.divSonglist).insertAdjacentHTML('beforeend', html);
         },
 
-        
+      
         createTrackDetail(img, title, artist) {
 
             const detailDiv = document.querySelector(DOMElements.divSongDetail);
-          
+           
             detailDiv.innerHTML = '';
 
             const html = 
@@ -182,67 +183,66 @@ const UIController = (function() {
 
 const APPController = (function(UICtrl, APICtrl) {
 
-
+    
     const DOMInputs = UICtrl.inputField();
 
    
     const loadGenres = async () => {
-       
+      
         const token = await APICtrl.getToken();           
-       
-        UICtrl.storeToken(token);
         
+        UICtrl.storeToken(token);
+      
         const genres = await APICtrl.getGenres(token);
        
         genres.forEach(element => UICtrl.createGenre(element.name, element.id));
     }
 
-   
+
     DOMInputs.genre.addEventListener('change', async () => {
-      
+   
         UICtrl.resetPlaylist();
-       
+      
         const token = UICtrl.getStoredToken().token;        
        
         const genreSelect = UICtrl.inputField().genre;       
-        
-        const genreId = genreSelect.options[genreSelect.selectedIndex].value;             
-    
-        const playlist = await APICtrl.getPlaylistByGenre(token, genreId);       
        
+        const genreId = genreSelect.options[genreSelect.selectedIndex].value;             
+      
+        const playlist = await APICtrl.getPlaylistByGenre(token, genreId);       
+      
         playlist.forEach(p => UICtrl.createPlaylist(p.name, p.tracks.href));
     });
      
 
-    
     DOMInputs.submit.addEventListener('click', async (e) => {
-      
+  
         e.preventDefault();
     
         UICtrl.resetTracks();
-     
+        
         const token = UICtrl.getStoredToken().token;        
        
         const playlistSelect = UICtrl.inputField().playlist;
        
         const tracksEndPoint = playlistSelect.options[playlistSelect.selectedIndex].value;
-     
-        const tracks = await APICtrl.getTracks(token, tracksEndPoint);
        
+        const tracks = await APICtrl.getTracks(token, tracksEndPoint);
+     
         tracks.forEach(el => UICtrl.createTrack(el.track.href, el.track.name))
         
     });
 
    
     DOMInputs.tracks.addEventListener('click', async (e) => {
-        
+       
         e.preventDefault();
         UICtrl.resetTrackDetail();
-   
+       
         const token = UICtrl.getStoredToken().token;
       
         const trackEndpoint = e.target.id;
-      
+       
         const track = await APICtrl.getTrack(token, trackEndpoint);
        
         UICtrl.createTrackDetail(track.album.images[2].url, track.name, track.artists[0].name);
