@@ -87,10 +87,9 @@ const APIController = (function() {
 })();
 
 
-// UI Module
+
 const UIController = (function() {
 
-    //object to hold references to html selectors
     const DOMElements = {
         selectGenre: '#select_genre',
         selectPlaylist: '#select_playlist',
