@@ -18,16 +18,16 @@ label {
 }
 
 img {
-    width:140px;
-    height:140px;
+    width:500px;
+    height:500px;
 }
 
 .btn-success {
-    background-color: #3b7d4a!important;
+    background-color: #FF69B4!important;
 }
 
 .btn-success:hover {
-    background-color: #4daf64!important;
+    background-color: #FFB6C1!important;
 }
 
 img.track {
